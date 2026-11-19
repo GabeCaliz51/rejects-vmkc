@@ -52,6 +52,20 @@ function getInputP2() {
   };
 }
 
+// Prototype-level visibility fix: the box fighters should not occupy the same
+// screen space during normal combat. Character-specific throws/specials are
+// deliberately NOT implemented in this old prototype.
+const MIN_FIGHTER_SPACING = 1.2;
+function keepBothFightersVisible() {
+  const dx = p2.mesh.position.x - p1.mesh.position.x;
+  const distance = Math.abs(dx);
+  if (distance >= MIN_FIGHTER_SPACING) return;
+  const direction = dx < 0 ? -1 : 1;
+  const correction = (MIN_FIGHTER_SPACING - distance) / 2;
+  p1.mesh.position.x -= direction * correction;
+  p2.mesh.position.x += direction * correction;
+}
+
 function updateCamera() {
   const midX = (p1.mesh.position.x + p2.mesh.position.x) / 2;
   camera.position.x = midX;
@@ -89,6 +103,7 @@ function loop() {
   p1.step(getInputP1(), p2);
   p2.step(getInputP2(), p1);
   checkHits();
+  keepBothFightersVisible();
 
   updateCamera();
   applyShake();
