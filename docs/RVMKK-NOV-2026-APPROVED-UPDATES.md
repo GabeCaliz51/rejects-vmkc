@@ -26,7 +26,7 @@ GitHub main initially held a small colored-box prototype (public/fighter.js, pub
 ## November 18 source recovery / integration safety
 A separate, SHA-256-verified **current RVMKK site integration export** was recovered from the user's saved project Library: `RVMKK-Recent-Verified-Updates-2026-11-18.zip`. It contains 22 files from the November three-fighter import: 8 character WebP assets and 14 source files. It is **not** the older `rejects-vmkc` box-fighter prototype, and is not the whole site's current source tree.
 
-A second safety-filtered ZIP, `RVMKK-Current-Game-Safe-Integration-2026-11-18.zip`, was produced with 20 SHA-256 verified entries (8 art assets + 12 review-only source files), explicitly **excluding** `KardozoSlam.mjs` and `KardozoSlamView.mjs`. It also includes a read-only Node worktree audit. This ZIP is a separate user-accessible artifact, **not uploaded to this GitHub repo**.
+A second safety-filtered ZIP, `RVMKK-Current-Game-Safe-Integration-2026-11-18.zip`, was produced with 19 SHA-256 verified entries (8 art assets + 11 review-only source files), explicitly **excluding** `KardozoSlam.mjs`, `KardozoSlamView.mjs`, and `SlamRagdoll.mjs`. It also includes a read-only Node worktree audit. This ZIP is a separate user-accessible artifact, **not uploaded to this GitHub repo**.
 
 Do not overwrite any game source file from these snapshots without comparing with the live working checkout at `C:\Projects\rvmkk-phone-preview` (last known root, not newly reverified). Importer snapshot may be older than current local edits. In particular `CombatModel.mjs` and `ArenaEngine.mjs` are shared combat source files and could indirectly impact Kardozo; review them line-by-line.
 
