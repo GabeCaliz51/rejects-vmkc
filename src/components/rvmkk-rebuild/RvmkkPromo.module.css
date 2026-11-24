@@ -1,0 +1,15 @@
+.promo{box-sizing:border-box;display:grid;grid-template-columns:minmax(240px,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,64px);align-items:center;max-width:1120px;margin:clamp(28px,5vw,65px) auto;padding:clamp(18px,3vw,38px);background:radial-gradient(ellipse at 12% 0%,#6d26342e,transparent 65%),#111019;border:1px solid #9e774b;border-top:3px solid #d9ae64;box-shadow:0 18px 70px #0008;color:#eee4d6;text-align:left;}
+.poster{position:relative;display:block;border:1px solid #b09260;box-shadow:8px 12px 0 #0006;overflow:hidden;color:#21130f;text-decoration:none!important;}
+.poster img{display:block;width:100%;height:auto;object-fit:contain;transition:transform .2s ease;}
+.poster>span{position:relative;display:flex;justify-content:space-between;padding:13px 18px;background:#e9bb6ded;color:#191015;font:900 14px Impact,'Arial Black',sans-serif;letter-spacing:2px;}
+.poster:hover img{transform:none;}
+.copy h2{margin:0 0 18px;color:#f0cc91;font:900 clamp(25px,3.2vw,46px)/1.06 Impact,'Arial Black',sans-serif;letter-spacing:1px;text-shadow:2px 3px #000;}
+.exclusive{margin:0 0 17px;color:#c6b097;font:800 10px/1.6 Arial,sans-serif;letter-spacing:2px;}
+.copy .tagline{margin:0 0 15px;color:#ed7d70;font:900 15px/1.4 Impact,'Arial Black',sans-serif;letter-spacing:1.4px;}
+.copy>p:not(.exclusive):not(.tagline):not(.controls){max-width:450px;color:#c4b7aa;font:400 15px/1.8 Arial,sans-serif;}
+.play{display:inline-flex;align-items:center;gap:24px;margin:15px 0 5px;padding:16px 22px;background:#e4b66b;border:1px solid #ffe5b1;color:#171014!important;text-decoration:none!important;font:900 15px Impact,'Arial Black',sans-serif;letter-spacing:1.2px;box-shadow:4px 5px 0 #0006;}
+.play:hover{background:#ffdc9e;}
+.poster:focus-visible,.play:focus-visible{outline:3px solid #fff0cb;outline-offset:5px;}
+.controls{margin:15px 0 0;color:#8f8378;font:800 9px/1.7 Arial,sans-serif;letter-spacing:.8px;}
+@media(max-width:700px){.promo{grid-template-columns:1fr;margin:25px 14px;padding:18px;gap:28px;}.poster{max-width:430px;width:100%;justify-self:center;}.copy h2{font-size:clamp(25px,7vw,38px);}.play{font-size:13px;padding:15px 17px;gap:18px;}.exclusive{font-size:8px;}.copy>p:not(.exclusive):not(.tagline):not(.controls){font-size:14px;}}
+@media(prefers-reduced-motion:reduce){.poster img{transition:none;}.poster:hover img{transform:none;}}
