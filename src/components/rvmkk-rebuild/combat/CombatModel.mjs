@@ -530,11 +530,12 @@ export class CombatModel {
     if (winner !== null) this.fighters[winner].wins++;
     const matchWinner = this.fighters.findIndex(f => f.wins >= 2);
     this.result = { winner, reason, matchWinner: matchWinner < 0 ? null : matchWinner };
-    // On a completed normal match, always play the winner's finisher, whether
-    // the last round ended by KO or by time-up. Keep Kardozo's original KO-only rule.
+    // Every established fighter with a Fucktality gets the cinematic when the match
+    // is actually won. Do not suppress a fighter's finisher just because the final
+    // round ended on the clock; draws and double-KOs still have no winner.
     const winnerId = winner===null ? null : this.fighters[winner].definition.id;
     const showFinisher = winnerId && !this.bossBattle && finisherFor(winnerId) &&
-      (reason==='KO' || (winnerId!=='kardozo' && reason==='TIME UP'));
+      reason !== 'DOUBLE KO' && reason !== 'DRAW';
     this.phase = matchWinner < 0 ? 'roundOver' : showFinisher ? 'finishReady' : 'matchOver';
     this.finishClock=0;
     if(this.phase==='finishReady')this.events.push({type:'finisherStart',serial:++this.serial,owner:matchWinner,defender:1-matchWinner});
