@@ -5,7 +5,7 @@ export const FUCKTALITIES=Object.freeze({
  'keen-kahn':{name:'DOCTOR’S ORDERS',prop:'curtain',color:0xc8a553,beats:['Privacy, please.','That grin is not reassuring.','Three pulls. No second opinion.','The necklace reveal.']},
  kitaria:{name:'TALKED TO DEATH',prop:'story',color:0x9859ed,beats:['So anyway, about this dick…','You cannot walk out of this story.','Sit tight. She’s still talking.','Same story. Still not finished.']},
  treytaro:{name:'THIRTY MINUTES OR YOU’RE FREE',prop:'delivery',color:0xe59930,beats:['Your delivery is here.','Three pieces. No substitutions.','Black vest. Blue stitching.','Delivery complete.']},
- kardozo:{name:'FOUR-SLAM CUSTOMER SERVICE',prop:'slams',color:0xc76f36,beats:['Grabs them by the legs.','Left. Right.','Left. Right. Four slams.','Dusts off all four hands.']},
+ kardozo:{name:'FOUR-ARM OVERKILL',prop:'overkill',color:0xc76f36,beats:['All four arms grab at once.','Off the floor. No warning.','Round and round they go.','One final launch. Dusts off all four hands.']},
  gaibden:{name:'BAD FUCKING CONNECTION',prop:'lightning',color:0x64c7ff,beats:['That smile means trouble.','Eyes charged. Personal space cancelled.','Electric Superman. Wrong place to get shocked.','Opposite wall. End of transmission.']},
  'datennisha-blaze':{name:'HURRY THE FUCK UP',prop:'skulls',color:0x80719d,beats:['Diamond-blue eyes. Evil eyebrows.','The skulls are coming from her eyebrows.','NOW YOU KNOW HOW TO FUCKING HURRY!','FINISH GETTING YOUR ASS BIT—I GOTTA PEE!']},
  'gare-chi':{name:'BUGLES BREAK',prop:'armbreak',color:0xf3c94b,beats:['Puts the Bugles away. Cracks his knuckles.','Wrist twist. Under the arm. Over his shoulder.','Repeated nose punches. Bruce Lee energy.','Back to the Bugles.']},
@@ -23,7 +23,7 @@ export function finisherStage(id,t){
  if(id==='scorpurtis')return t<2?'chain-ready':t<6?'chain-grab':t<8.5?'chain-pull':'chain-finish';
  if(id==='keen-kahn')return t<2?'curtain':t<3.5?'grin':t<7.7?'pull-'+Math.min(3,1+Math.floor((t-3.5)/1.4)):'necklace-reveal';
  if(id==='treytaro')return t<2?'pizza-throw':t<3.4?'three-cuts':t<5?'three-pieces':t<6.2?'vest-and-scooter':t<8.7?'burnout-and-runover':'delivery-exit';
- if(id==='kardozo')return t<2?'leg-grab':t<7.6?'slam-'+Math.min(4,1+Math.floor((t-2)/1.4)):'dust-four-hands';
+ if(id==='kardozo')return t<1.6?'four-arm-grab':t<3.8?'lift':t<7.8?'spin-cycle':t<9.2?'final-launch':'dust-four-hands';
  if(id==='kitaria')return t<3?'story':t<4.5?'follow-and-tug':t<5.3?'annoyed-collapse':'seated-story';
  if(id==='gaibden')return t<2.5?'evil-grin':t<3.4?'eye-charge':t<7.3?'electric-flight':t<8.2?'wall-slam':'brush-hands';
  if(id==='datennisha-blaze')return t<2?'eyebrow-closeup':t<3?'skulls-emerge':t<7.5?'skull-chase':'arms-folded';
@@ -32,12 +32,12 @@ export function finisherStage(id,t){
 export function cinematicPose(id,t,loser=false){
  if(loser && ['nicoleena','cokane-o','scorpurtis'].includes(id))
    return {atlas:'base',frame:0,name:'finisher-victim-'+finisherStage(id,t)};
- if(loser){const flat=id==='kitaria'?t>=5.3:id==='kardozo'?t>=7.6:id==='gaibden'?t>=8.2:id==='datennisha-blaze'?t>=7.5:t>=7.8;return {atlas:'limbs',frame:flat?15:t>3?12:13,name:'finisher-victim-'+finisherStage(id,t)};}
+ if(loser){const flat=id==='kitaria'?t>=5.3:id==='kardozo'?t>=9.2:id==='gaibden'?t>=8.2:id==='datennisha-blaze'?t>=7.5:t>=7.8;return {atlas:'limbs',frame:flat?15:t>3?12:13,name:'finisher-victim-'+finisherStage(id,t)};}
  const frames={
  'keen-kahn':t<2?4:t<3.5||t>7.7?6:2,
  kitaria:t<5.3?4:5,
  treytaro:t<3.4?7:t<5?0:2,
- kardozo:t<2?8:t<7.6?8:12,
+ kardozo:t<1.6?8:t<7.8?5:12,
  gaibden:t<2.5?2:t<7.3?3:6,
  'datennisha-blaze':t<3?4:t<7.5?6:2,
  'gare-chi':t<2?4:t<4.8?5:t<7.8?(Math.floor(t*7)%2?5:7):1,
@@ -84,6 +84,6 @@ export function cinematicLayout(id,t){
  if(id==='cokane-o'){winner.x=-1.2+Math.sin(t*9)*.25;loser.x=1.45;loser.angle=t>6?-.7*Math.min(1,(t-6)/1.5):0;}
  if(id==='scorpurtis'){winner.x=-1.5;loser.x=t<2?1.8:t<8?1.8-(t-2)*.21:.5;loser.angle=t>8?-.65:0;}
  if(id==='gaibden'&&t>=8.2)loser.angle=0;
- const shot=t<2?0:t<3.5?1:t<7.7?2:3;
- return {winner,loser,shot,viewHeight:shot===1?6:8.6,cameraX:0,cameraY:3.4};
+ const shot=t<1.6?0:t<3.8?1:t<7.8?2:3;
+ return {winner,loser,shot,viewHeight:shot===1?6.6:9.0,cameraX:0,cameraY:3.45};
 }
