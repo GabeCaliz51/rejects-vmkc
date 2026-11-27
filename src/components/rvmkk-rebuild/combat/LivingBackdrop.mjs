@@ -99,8 +99,8 @@ export class LivingBackdrop {
   update(delta, model, canvas) {
     const frustumWidth=this.camera.right-this.camera.left;
     const frustumHeight=this.camera.top-this.camera.bottom;
-    const height=Math.max(6.1,frustumHeight*1.55);
-    const width=Math.max(height*(this.imageAspect||16/9),frustumWidth*1.35+Math.abs(this.camera.position.x)*2);
+    const height=Math.max(6.1,frustumHeight*1.25);
+    const width=Math.max(height*(this.imageAspect||16/9),frustumWidth*1.10+Math.abs(this.camera.position.x)*1.35);
     this.group.scale.set(width,height,1);
     this.sourceWidth=width;this.sourceHeight=height;
     this.cover.set(Math.max(1,width/(height*(this.imageAspect||16/9))),1);
