@@ -6,6 +6,7 @@ function mesh(g,geometry,m,x=0,y=0,z=0){const o=new THREE.Mesh(geometry,m);o.pos
 function box(g,m,x,y,z,w,h,d=.1){return mesh(g,new THREE.BoxGeometry(w,h,d),m,x,y,z);}
 function sphere(g,m,x,y,z,r){return mesh(g,new THREE.SphereGeometry(r,12,10),m,x,y,z);}
 function stroke(g,points,color,width=1){const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(points.map(p=>new THREE.Vector3(...p))),new THREE.LineBasicMaterial({color,linewidth:width}));g.add(line);return line;}
+function setStroke(line,a,b){const p=line.geometry.attributes.position;p.setXYZ(0,a[0],a[1],a[2]??0);p.setXYZ(1,b[0],b[1],b[2]??0);p.needsUpdate=true;line.geometry.computeBoundingSphere();}
 function pizza(g){const p=new THREE.Group();g.add(p);mesh(p,new THREE.CylinderGeometry(.7,.7,.08,28),material(0xbc7630)).rotation.x=Math.PI/2;mesh(p,new THREE.CylinderGeometry(.62,.62,.02,28),material(0xf6c74f),0,0,.055).rotation.x=Math.PI/2;for(let i=0;i<9;i++)sphere(p,material(0xa32c22),Math.cos(i*2.4)*.42,Math.sin(i*2.4)*.42,.09,.085);return p;}
 function skull(g){const s=new THREE.Group();g.add(s);const bone=material(0x302735,.92),black=material(0x030206),teeth=material(0x968499);sphere(s,bone,0,.1,0,.23);sphere(s,black,-.09,.14,.19,.065);sphere(s,black,.09,.14,.19,.065);box(s,black,0,.02,.22,.045,.06);const jaw=new THREE.Group();s.add(jaw);for(let i=0;i<5;i++)box(jaw,teeth,(i-2)*.055,-.1,.19,.035,.11);s.userData.jaw=jaw;return s;}
 function scooter(g){const s=new THREE.Group();g.add(s);const black=material(0x15151b),chrome=material(0xb5bec9),blue=material(0x23619a),tan=material(0xc9a06b);for(const x of [-.85,.85]){mesh(s,new THREE.TorusGeometry(.32,.1,10,24),black,x,.4,.1);mesh(s,new THREE.CircleGeometry(.21,18),chrome,x,.4,.11);}box(s,blue,0,.7,0,1.8,.35,.38);box(s,blue,.68,1.05,0,.35,1,.4);box(s,black,-.3,1.05,0,.85,.18,.5);stroke(s,[[.7,1.4,0],[.7,1.8,0],[.35,1.8,0]],0xb5bec9);sphere(s,material(0xffeec2),.85,1.4,.2,.14);for(let i=0;i<5;i++)box(s,tan,-.85,1.25+i*.16,0,.9,.14,.7);return s;}
@@ -49,7 +50,7 @@ export class FinisherVfx{
       }
     }
   }
-  if(spec.prop==='slams'||spec.prop==='armbreak'){this.impact=new THREE.Group();this.main.add(this.impact);for(let i=0;i<12;i++){const a=i*Math.PI/6;stroke(this.impact,[[Math.cos(a)*.2,Math.sin(a)*.2,0],[Math.cos(a)*.8,Math.sin(a)*.8,0]],spec.color);}}
+  if(spec.prop==='overkill'){this.grips=[];for(let i=0;i<4;i++)this.grips.push(stroke(this.main,[[0,0,.9],[0,0,.9]],spec.color,1));this.gripRing=mesh(this.main,new THREE.RingGeometry(.35,.43,36),material(spec.color,.72),0,0,.75);this.impact=new THREE.Group();this.main.add(this.impact);for(let i=0;i<18;i++){const a=i*Math.PI/9;stroke(this.impact,[[Math.cos(a)*.15,Math.sin(a)*.15,.75],[Math.cos(a)*.95,Math.sin(a)*.95,.75]],spec.color);}}\n  if(spec.prop==='armbreak'){this.impact=new THREE.Group();this.main.add(this.impact);for(let i=0;i<12;i++){const a=i*Math.PI/6;stroke(this.impact,[[Math.cos(a)*.2,Math.sin(a)*.2,0],[Math.cos(a)*.8,Math.sin(a)*.8,0]],spec.color);}}
  }
  update(actors=[]){const m=this.model,active=m.phase==='finisher';this.group.visible=active;if(!active)return;const id=m.fighters[m.result.matchWinner].definition.id;if(id!==this.id)this.build(id);const t=m.finishClock,film=cinematicLayout(id,t),spec=finisherFor(id);this.main.visible=true;
   if(spec.prop==='curtain'){
@@ -76,8 +77,12 @@ export class FinisherVfx{
     this.newcomer.scale.set(.6+Math.min(1,Math.max(0,(t-2)/5)),.7+Math.sin(t*10)*.10,1);
     this.newcomer.rotation.z=spec.prop==='poses'?Math.sin(t*7)*.15:Math.sin(t*5)*.04;
   }
-  if(spec.prop==='slams'){
-   const q=((t-2)%1.4)/1.4;this.impact.visible=false;this.impact.position.set(film.loser.x,.2,.8);this.impact.scale.setScalar(.65+q*.8);
+  if(spec.prop==='overkill'){
+   const winner=film.winner,loser=film.loser,grab=C(t/1.6),spin=C((t-1.6)/6.2);
+   const handOffsets=[[-.92,2.25],[.92,2.25],[-.78,1.02],[.78,1.02]];
+   this.grips.forEach((line,i)=>{line.visible=t<8.0;const a=[winner.x+handOffsets[i][0]*grab,handOffsets[i][1]*grab,.92];const angle=(t-1.6)*3.4+i*Math.PI/2;const b=[loser.x+Math.cos(angle)*.52,loser.y+.45+Math.sin(angle)*.32,.92];setStroke(line,a,b);line.material.opacity=.55+.35*grab;line.material.transparent=true;});
+   this.gripRing.visible=t>=1.25&&t<7.95;this.gripRing.position.set(loser.x,loser.y+.55,.76);this.gripRing.rotation.z=t*4.2;this.gripRing.scale.setScalar(.65+spin*.9);
+   this.impact.visible=t>=7.8&&t<9.0;this.impact.position.set(loser.x,Math.max(.35,loser.y),.78);this.impact.scale.setScalar(.55+C((t-7.8)/.55)*1.35);
   }
   if(spec.prop==='armbreak'){
    this.impact.visible=t>=3.9&&t<4.3||t>=4.8&&t<7.8&&Math.sin(t*20)>.25;this.impact.position.set(t<4.8?-.2:.85,t<4.8?1.9:2.5,.7);this.impact.scale.setScalar(.45);
