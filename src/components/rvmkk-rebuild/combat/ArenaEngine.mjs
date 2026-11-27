@@ -366,9 +366,9 @@ export class ArenaEngine {
     const [a, b] = this.model.fighters;
     const midpoint = (a.x + b.x) / 2;
     this.canvas.dataset.visualSeparation = visualGap.toFixed(3);
-    const highest = Math.max(a.y, b.y) + 3.7;
+    const highest = Math.max(a.y, b.y) + 4.35;
     
-    const vertical = Math.max(6.2, (Math.abs(a.x - b.x) + visualGap * 2 + 5.2) / this.aspect, highest / .76);
+    const vertical = Math.max(6.5, (Math.abs(a.x - b.x) + visualGap * 2 + 5.2) / this.aspect, highest / .76);
     const targetY = vertical * .28;
     const top = vertical / 2, halfWidth = top * this.aspect;
     Object.assign(this.camera, { left: -halfWidth, right: halfWidth, top, bottom: -top }); this.camera.updateProjectionMatrix();
